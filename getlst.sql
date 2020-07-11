@@ -1,4 +1,4 @@
---getlst.sql – Script to download information about eScript from Oracle Database via SQL*Plus
+--getlst.sql â€“ Script to download information about eScript from Oracle Database via SQL*Plus
 set termout off
 set colsep "#"
 set head off verify off feedback off
@@ -59,6 +59,14 @@ select r.name as repository_name, 'Business Service' as obj_type , s.name as ser
  and   sst.repository_id = s.repository_id
  and   r.name = 'Siebel Repository'
  and   sst.last_upd > to_date('01.01.2009','DD.MM.RRRR');
+spool off
+
+spool '&_prod' 
+ SELECT  'Siebel Repository' as repository_name, 'Product Script' as obj_type ,  s.VOD_NAME as service_name, sst.SCRIPT_NAME as script_name, sst.last_upd, sst.script_TEXT
+ FROM siebel.S_ISS_OBJ_SCRPT SST, siebel.s_vod S
+ WHERE SST.item_id = S.OBJECT_NUM 
+and s.VOD_TYPE_CD = 'ISS_PROD_DEF' 
+  and   sst.last_upd > to_date('01.01.2009','DD.MM.RRRR');
 spool off
 
 exit
